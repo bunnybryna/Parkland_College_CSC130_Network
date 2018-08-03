@@ -1,0 +1,1108 @@
+
+D:\VMWare\CSC130\CSC130G2
+
+FileOpen=>D:\VMWare\CSC130\CSC130G2\XP Mauney=>open=>power on
+
+192.168.1.13
+13
+
+My Network Places=>Local Area Connection Connected=>Properties=>Internet Protocol(TCP/1P)=>Properties
+IP address:192.168.1.13
+Subnet mask:255.255.255.0
+Default Gateway:192.168.1.1
+
+Preferred DNS 192.168.1.155
+
+cmd:
+ipconfig/all
+ping 192.168.1.13
+ping (neighbour)
+
+ping /?
+ping -?
+check -t ping until force to stop
+ping /t 192.168.1.11
+
+ipconfig /all
+(reversed look up)
+Host Name PARKLAND-57ADB9
+
+nslookup 192.168.1.31
+
+My Computer
+Computer Name
+Computer desciription Byrna Zhao 13
+Computer Name
+varnado
+don't have to specify ip just
+nslookup varnado
+
+--------0124
+
+surt.csc130..parkland.edu 155 DNS
+olin - win smb server
+two Ethernet cards
+all three will work: 
+ping varnado
+ping varnado.csc130.parkland.edu
+ping 192.168.1.13 
+
+surt
+port# 53
+netbios
+port# 137,8,9
+packet sniffer
+
+Wireshark
+Capture=>Interfaces=>VMware=>start
+next time =>Capture=>start=>continue without saving
+source: ip address or mac address
+
+chapter 1,3,17
+
+sort Protocol
+then sort No.
+Source Destination Protocol                                Info 
+31        255       NBNS(name service connects name to ip)       name query NB GRANDOTE
+      	   ||
+       broadcast 
+everyone is processing the packet
+while Wireshark is running 
+
+Physical Address: MAC Address 
+00-0C-29 WMware, A9-FE-19 address resolution protocol(ARP connects ip to mac)
+shout: who is grandote?
+grandote answers: what's your mac?
+grandote's mac first, then my mac
+arp -a to view arp caches
+ICMP
+
+another try: xxx.csc130.parkland.edu
+this time server answers instead of grandote 
+
+--------0129
+useradd -c "Student Thirtyone" -d/home/student31 -m -k/etc/skel student31
+-m make directory
+-k copy skeleton 
+
+grep student31 /etc/passwd 
+ls -l ~student31
+
+smbpasswd -a student31
+-a add
+
+view workgroup computers
+Olin(right click or "\\Olin")student13 student13
+c1 c3 are done
+move to c2. focus on book
+OSI Model
+p d n t s p a
+please do not throw sausage pizza away
+
+Application: file transfer, name services, smtp(simple mail transfer protocol, port 25), telnet(port23)
+Presentation: provides network views, redirector
+Session
+Trnasport
+Network
+Data-link
+Physical
+
+name server matches name to IP
+ARP matches IP to MAC
+
+cmd:
+telnet surt.csc130.parkland.edu 25
+
+putty
+telnet port 25 (port opens the transport layer)
+
+helo me
+mail from: whoever@surt.csc130.parkland.edu
+rcpt to:student2@surt.csc130.parkland.edu
+data
+...
+data
+quit
+
+\\olin\userhome
+
+h:
+
+net use h: \\olin\userhome /persistent:no
+
+
+--------0131
+traffit becomes heavy, more bandwidth spent on collision 
+
+a token ring network, logical(ring) and physical(star) topology can differ
+
+dos commands
+h:
+dir
+c: take back to the default directory
+
+h: and \\olin\userhome they're on the same presentation layer
+
+
+Net Use Command examples 
+To assign the disk-drive device name E: to the Letters shared directory on the \\Fin server, type: 
+net use e: \\fin\letters
+To assign (map) the disk-drive device name M: to the directory Mike within the Letters volume on the \\Fin NetWare server, type:
+net use m: \\fin\letters\mike
+To connect the user identifier Dan as if the connection were made from the Accounts domain, type:
+net use d:\\server\share /USER:Accounts\Dan
+To disconnect from the \\Fin\Public directory, type: 
+net use f: \\fin\public /DELETE
+To connect to the resource memos shared on the \\Fin 3 server, type: 
+net use k: "\\fin 3" \memos
+To restore the current connections at each logon, regardless of future changes, type: 
+net use /PERSISTENT:yes
+
+port =>layer 4 transport
+TCP Guarantee
+UDP not guarantee
+BSD style sockets
+
+ipconfig flushes
+--------0205
+UNC style path:
+Microsoft Windows uses the following types of paths: local file system (LFS), such as C:\File. uniform naming convention (UNC),
+such as \\Server\Volume\File or / <internet resource name>[\Directory name] (at least in Windows 7 and later)
+
+session layer
+compare file transfer efficiency
+ftp port 21, (.31=>.155, use Wireshark sort by Source ), 50, highly efficient but not secure
+sftp(secure file transfer protocol) port 22(.157=.>155), 200(50 times 4)
+smb:.32=>.155 800, windows style 
+daemon (d means server)
+
+netstat -a
+shows summary statistics for each protocol, UDP and TCP
+UDP: no guarantee delivery, packet can be lost
+TCP: 3-way-handshake
+1500 byte payload, how big is the packet?
+
+A sliding window protocol:a feature of packet-based data transmission protocols
+The term "window" on the transmitter side represents the logical boundary of the total number of packets yet to be acknowledged by the receiver. 
+
+port
+surt is a mail server, how about port
+
+telnet surt.csc130.parkland.edu 25
+ctrl+c to quit
+open another shell and type
+netstat -n 192.168.1.13:1043, 1043 is the port
+if the port is closed, ask for reset, packet is returned by closed port
+SYN
+RST
+RST
+RST
+
+--------0207
+connect by the port we specify
+telnet olin 22
+netstat -n 
+(port 22 is secure, if you make mistake, send FIN to end the communication)
+port 25 is different, still connected 
+
+telnet surt.csc130.parkland.edu 255 
+surt is not listening on port 255
+RST: RESET
+
+a virus is a binary
+but worm can be a text
+don't turn off ping!
+closed port return packets
+
+layer 3 Network
+Check if in my network, if yes=>ARP
+if not=> check the default gateway(the only one machine knows outside)
+ping olin(a server on my network)
+TTL=64
+ping 192.168.1.12(a known windows on my network)
+TTL=128
+ping 192.168.1.1(a rounter on my network)
+TTL=255
+ping 10.10.1.1 (first router outside my network)
+TTL=254(means one hop way from 255)
+
+change network: from 192.168.1.31 to 10.10.1.31
+now ping 192.168.1.12
+TTL = 126 (went through 2 routers, so 2 hops taken away)
+packets got seen twice, once when it goes in, second time get routed
+
+!!wireshark tutorial!!
+
+tracert 10.10.1.31
+TRACEROUTE (TRACERT)
+Traceroute (also known as tracert) is a computer network tool used to determine the route taken by packets across an IP network. 
+Traceroute is often used for network troubleshooting. 
+By showing a list of routers traversed, it allows the user to identify the path taken to reach a particular destination on the network.
+chapater 17
+
+Network latency
+Network latency is the term used to indicate any kind of delay that happens in data communication over a network. 
+Network connections in which small delays occur are called low-latency networks whereas network connections which suffers from long delays are called high-latency networks.
+
+
+layer 2 Data link
+when machine senses the packet:CRC is written at the end(tail) of package identification
+Cyclic redundancy check
+
+--------0212
+
+Layer 2 guarantee the integrity of the packet
+
+a packet begins with MAC ends with CRC
+
+frame relay
+
+CRC(Cyclic redundancy check)
+
+diff passwd passwd_orig
+
+md5sum passwd 
+
+-returns a hash value
+
+(if the data remains integrity,the hash value will be same)
+
+
+md5sum -c passwd.md5
+
+--passwd:OK
+
+change the file and check again
+
+--passwd:Failed
+
+grep 5060 /etc/services
+
+grep http /etc/services
+
+microsoft-ds    445/tcp
+
+INAN
+
+RFC 793 - Internet Engineering Task Force(IETF)
+
+port 443 secure
+
+port 123 
+
+port 25 send mail out
+
+--------0214
+chapter 6 
+TCP/CP design goals: 
+	Hardware Independent
+	Failure Recovery
+	handle errors
+	low overhead (18Byte Header)
+	new networks added w/o bringing down network
+
+Benefits:
+	Open Standard
+	OS independent
+	Separate from Physical Layer
+	Routable
+	Reliability
+	Net-Wide addressing scheme
+
+useradd -c "Student 23" -d/home/student23 -m -k /etc/ske1 stdeunt23
+shadow file 
+tail /etc/shadow
+# passwd studnet 23
+a hash value(one way encrypted)
+
+man 5 shadow
+
+different ports and protocols
+SNMP: manage routers
+FTP:File Transfer Protocol 20/21
+TFTP: Trivial File Transfer Protocol (UDP)
+Telnet: remote shell
+SSH: secure shell 22
+
+ftp 192.168.1.155
+
+Wireshark:
+sort by Source
+FTP is not secure, you can see not encrypted username and password 
+Request: USER student31
+Request: PASS whatEver
+
+try putty(SSH)
+the request packet is encrypted
+
+chgrp change group
+chown change ownership
+chomod change mode 755
+
+web presentation is different from shell presentation
+ftp ssh home = /home/student23
+http home = /home/student23/public_html (one directory deeper)
+http://surt.csc130.parkland.edu/~student23
+
+ftp surt.csc130.parkland.edu
+anonymous
+password whatever
+you can only see pub
+get anonymousftp 
+(the file is located on where you are)
+
+Chapter 17
+--------0219
+
+ftp lab
+http://www.csit.parkland.edu/~smauney/csc130/lab_ftp.txt
+
+
+get => download
+put => upload
+1)Pay attention to which is your present working directory
+ftp://surt.csc130.parkland.edu
+log in as student13
+password student13
+(then you can push files to it )
+ls(ls -l is not working in ftp)
+2) note, if you want to see it from http, remember to put it under public_html folder
+cd public_html
+put BrynaZhao.txt
+ 
+see it from window browser
+ftp://student13@surt.csc130.parkland.edu
+
+see it from http
+http://surt.csc130.parkland.edu/~student13/BrynaZhao.txt
+
+practice using putty
+sftp www.csit.parkland.edu
+bzhao1@www.csit.parkland.edu's password:
+
+calculate netmask 
+192.168.1.155
+255.255.255.0 Class C netmask
+
+1. conver IP to binary
+11000000,10101000,00000001,10011011  IP 192.168.1.155
+11111111,11111111,11111111,00000000  mask 255.255.255.0
+00000000,00000000,00000000,11111111  invert netmask
+11000000,10101000,00000001,00000000  IP and mask => net 192.168.1.0
+11000000,10101000,00000001,11111111  IP or invert netmask => broadcast
+
+
+11000000,10101000,00000001,00001111  IP 192.168.1.15
+11111111,11111111,11111111,10000000  mask 255.255.255.128
+00000000,00000000,00000000,01111111  invert netmask
+11000000,10101000,00000001,00000000  IP and mask => net 192.168.1.0
+11000000,10101000,00000001,11111111  IP or invert netmask => broadcast same
+
+Classless Inter-Domain Routing
+
+nslookup mit.edu
+Class A 1-126.x.y.z
+B 129-191.1-254.y.z
+C 192-233.1-254.1-254.z 
+
+ping localhost
+pinging varnado 127.0.0.1 
+loopback 
+
+C:\WINDOWS\system32\drivers\etc
+change hosts to 
+192.168.1.155 facebook.com
+save it as host(not txt)
+
+then ping facebook.com
+
+ping facebook.com
+
+--------0221
+ipconfig /flushdns
+nbtstat -R(clear the name caches)
+
+change evill to evillr
+ping evill won't work 
+but ping evill.csc130.prkland.edu still works 
+
+to fix it: add DNS suffix to DNS server for name resolution first
+network connections=> local area connection => properties => General => Internet Protocol(TCP/IP)
+=>Advanced => DNS=> Append these DNS suffixes => Add(csc130.parkland.edu)
+
+Configuring Query Settings.
+ Right-click My Network Places , and then click Properties
+ . Right-click the connection that you want to view, and then click Properties
+ . Click Internet Protocol (TCP/IP) , and then click Properties
+ . Click Advanced , and then click the DNS tab.
+
+ipconfig /all=>DNS Suffix search list
+which one is taking precedence 
+
+ping whatever:successful
+means hosts file has been checked 
+
+if comment out whatever in the hosts file
+ping whatever: not successful
+that hosts file wasn't cached 
+
+save 192.168.1.6 francis in hosts file (actually 1.3 is francis)
+ping francis=> 1.6
+dns is redefined 
+which one comes first ? hosts file or dns caches
+
+hosts file first 
+hosts => two caches(netbios, dns cache) => suffix => two name server => broadcast 
+
+
+
+
+\\olin\NETLOGON
+
+
+(pause to debug)
+place a batch file on the server and run it
+
+net use s: /delete /y
+net use s: \\olin\software /persistent:no
+pause
+
+ip 128.15.211.60	10000000,00001111,11010011,00111100
+netmask 255.255.255.192 11111111,11111111,11111111,11000000
+logical and   
+invert net mask         00000000,00000000,00000000,00111111          
+ip 128.15.211.60	10000000,00001111,11010011,00111100
+logical or              10000000,00001111,11010011,00111111
+
+broadcast 216.125.250.31 11011000,01111101,11111010,00011111
+ip        216.125.250.11 11011000,01111101,11111010,00001011
+invert mk                
+
+ip 10.10.2.13 		  00001010,00001010,00000010,00001101
+netmask 255.255.255.128   11111111,11111111,11111111,10000000
+                          00000000,00000000,00000000,01111111
+			  00001010,00001010,00000010,00001101
+			  00001010,00001010,00000010,01111111
+
+
+216.125.250.76 IP           11011000,01111101,11111010,01001100
+255.255.255.192 Netmask     11111111,11111111,11111111,11000000
+                            11011000,01111101,11111010,01000000
+        
+
+invert                      00000000,00000000,00000000,00111111
+216.125.250.76 IP           11011000,01111101,11111010,01001100
+                            11011000,01111101,11111010,01111111
+
+
+
+
+216.125.250.76 IP                       11011000,01111101,11111010,01001100
+255.255.255.128 Netmask                 11111111,11111111,11111111,10000000
+                                        00000000,00000000,00000000,01111111
+216.125.250.76 IP                       11011000,01111101,11111010,01001100
+                                        11011000,01111101,11111010,01111111
+
+--------0226
+\\olin in a Microsoft work group X130
+olin is also a PDC X130 Domain(Windows domain, primary domain controller)
+
+performance on the server depend upon how the user logs in the server
+(layer 4 to layer 7)
+
+netstate
+
+su - root : switch tuser to root
+
+nslookup 192.168.1.23
+name = bigfish.csc130.parkland.edu
+useradd -c "Machine 23" -d /dev/null/:bin/false
+
+added user messi#
+smbpassed -a -m 
+
+my computer=>properties=>computer name=>change
+Join the Domain(fail, only domain can get someone in the group)
+root
+(alt+del+insert)restart the virtual machine
+login: student13, student13
+
+
+login=>options
+student13, student13
+
+find -maxdepth 4 -name week7.txt
+only when logoff the file gets written
+if not, the file gets loft
+
+
+--------0228
+
+on domain, can't run wireshark(requires administrator)
+
+pratical lab
+D:\VMWare\CSC130\CSC130G2 =>delete xp folder
+copy from E:\VM_Storage
+Run VM file open xp
+
+My Network Places=>Local Area Connection Connected=>Properties=>Internet Protocol(TCP/1P)=>Properties
+IP address:192.168.1.13
+Subnet mask:255.255.255.0
+Default Gateway:192.168.1.1
+
+Preferred DNS 192.168.1.155
+
+network connections=> local area connection => properties => General => Internet Protocol(TCP/IP)
+=>Advanced => DNS=> Append these DNS suffixes => Add(csc130.parkland.edu)
+
+My Computer
+Computer Name
+Computer desciription Byrna Zhao 13
+Computer Name
+varnado
+then reboot
+ipconfig /all
+
+change hosts file
+
+C:\WINDOWS\system32\drivers\etc
+change hosts to 
+192.168.1.155 dingdingding
+
+FTP:
+cd public_html
+put file
+
+http://surt/~student13/10amclass.txt
+--------------------------------------
+
+share is at the diretory level
+\\host\machine#
+\\hostname\sharename
+
+varnado\machine13(this is the shared folder)
+
+c:\week7
+sharing (not go through wizard)
+enable sharing
+shared name machine13
+
+
+batch file:
+delete first
+
+week7 me.txt
+
+try \\varnado\machine13 to check it
+
+net use f: /delete /y
+net use f: \\olin\software /persistent:no
+
+--------------------------------------
+how to check dns database(if changed)
+
+nslookup 192.168.1.13
+Server: surt.csc130.parkland.edu
+Address: 192.168.1.155
+
+Name: broccli.csc130.parkland.edu
+Address: 192.168.1.13
+
+change computer name to broccli
+
+
+how to find mac address of remote computer: ping and then arp -a
+
+how to change hosts file connecting dns server to google and olin to whatever
+
+ipconfig /all 
+see dns server is 192.168.1.155
+192.168.1.155  www.google.com
+change hosts file 
+
+nslookup olin or ping c
+192.168.1.157 whatever.com
+
+
+how to find fqdn of 192.168.1.15  
+nslookup 192.168.1.15  
+address: lamb.csc130.parkland.edu
+
+DNS VS FQDN
+For example, www.indiana.edu is the FQDN on the web for IU. In this case, www is the name of the host in the indiana.edu domain. 
+When connecting to a host (using an SSH client, for example), you must specify the FQDN. 
+The DNS server then resolves the hostname to its IP address by looking at its DNS table
+
+
+--------0312
+resolution:
+x.500 standard: how we name objects on the internet
+top level domain: edu, org..
+DNS: built to find other machines
+WINS: server answers 
+hosts file comes first over caches
+ 13 root servers all over the world 
+active directory
+map name to IPs
+
+nslookup google.com
+non-authoritative answer
+caches holds 30 secs to 2 mins
+
+resolver asks DNS server: 
+either error or record will come back
+
+example: nslookup whatever.com
+server checks its home 198.41.0.4 ubantu.com
+
+record types
+
+MXS is Mail exchange record, points to A record
+
+
+-------------------------TCP/IP Utilities Lab
+Connect to surt through port 80 by cmd
+tel surt 80
+Connect to surt through port 22 by putty
+open a windows explorer \\oin\software then use putty there
+surt.csc130.parkland.edu port 22
+login as student 13 student 13
+
+
+--------0314
+POP mail Lab 
+nslookup 192.168.1.13
+change name and description of the computer(don't start yet)
+add a new user account
+control panel: user account: student13
+reboot the compuater
+control panel: change password: student13
+
+\\olin\NETLOGON
+maps an M to \\olin\userhome and place this login script in \\olin\NETLOGON
+net use M: /delete /y
+net use M: \\olin\userhome /persistent:yes
+pause
+
+ \\olin\software Eudora
+install it in M:\mail\sp1810am
+place a shortcut on your desktop and name it BrynaZhaoEudora
+POP Server: surt.csc130.parkland.edu
+SMTP Server: surt.csc130.parkland.edu
+student13@surt.csc130.parkland.edu
+
+Make a signature and send an e-mail to smauney@surt.csc130.parkland.edu
+
+set machine to login domain, 
+mycomputer=>properties=>computer anme=>change=>domain x130
+
+--------0326
+cmd netstat shows your computer connected to olin
+then you can't log into domain
+\\olin
+WireShark: NBNS name query olin
+relog in as student31
+get in olin without ask for password/username
+
+surt has two ports: 25, 110
+25 is not authenticated, no secure connections either way, anonymous, outgoing
+110 is name/passowrd authenticated, incomming
+
+transportation layer security
+tools=>options=>checking mail=>secure sockets when receiving=>Never
+run WireShark, you can see PASS student1
+
+
+--------0328
+principle isolation
+password aging controls: change password often
+passwd -rw-r--r--
+
+afater 6 failed login attempts: server send a FIN
+Access denied, not saying bad password or no such user---anonymous enumeration
+
+log in surt: root@surt.csc130.parkland.edu
+cd /etc/ssh
+vi ssdh_config
+MaxAuthTries 6
+service sshd restart
+
+passwd
+shadow
+man passwrd
+man 5 passwd
+shadow file: hash function
+
+account lockout
+
+anonymous enumeration
+complexity requirement
+
+rwx don't apply to root user
+you can use attributes to block root
+
+
+--------0402
+netlogon
+permission rwx for student self
+authorization is taking place
+When you log on to a PC with a user name and password you are authenticating. Authorization is the process of verifying that you have access to something. 
+Gaining access to a resource (e.g. directory on a hard disk) because the permissions configured on it allow you access is authorization.
+a file is created with a umask 644, rw-r--r--, 6 is 110, 4 is 100
+file system permission
+file system attribute
+the block(umask) is put on the bridge between inode and the actual data, not on the inode 
+you can still see it
+
+on NEWSHARE
+even though you can't open other's file, you can delete it
+because the directory is world-read, write, execute-able( parrent permission) which controls if you can delete the file inside it
+three layers of controls: 1.permission, 2. attributes, 3. ACL
+ 
+neglogon permission: drwxrwxrwt, t: sticky bit, only the file owner can delete it
+the permission won't apply to root
+file attibutes act against root
+
+lsattr 
+chmod 000 afile.txt
+mv afile.txt backup/afile.txt
+chmod 000 backup
+users can't delete backup anymore, but not prevent root
+chattr +i afile2.txt(---change the file immutable)
++a :only can append this file 
+https://wiki.archlinux.org/index.php/File_permissions_and_attributes
+
+
+--------0404
+RDP: Remote Desktop Protocol
+Microsoft remote desktop connection
+
+share-level user-level
+sharing vs security: 
+security deals with users sitting at the machine or remoting in
+sharing deals with access controls to someone coming from network
+
+
+local group policy editor
+security settings
+account lockout policy:account lockout duration
+account lockout threshold
+
+--------0409
+account maintenance
+need to have a directory to share(even for one file)
+authorization is happening along the whole path, but check the parent folder first
+create mask 700=>644
+depends on which directory you drag files into, it changes the access to the files
+front-end to back-end
+
+The difference between AUTH(entication) and Authorization and how a file is stored. - We found that even though all of our files that were in the \\OLIN\NETLOGON share could only be executed by us, ANYONE could delete them. There is a difference in how files are opened, so for instance if a file was opened to execute the local file permission denying anyone else execute access denied that. 
+BUT if someone tried to open the file for deletion the permission for the parent directory was checked and since anyone could do anything at that level, the file would be deleted.
+To prevent this, we employed the "sticky bit" which can be viewed like this on shaula.csit.parkland.edu 
+ls -ld /tmp which will show that the permission on the /tmp directory is:
+drwxrwxrwt where the t is the "sticky" bit. This sticky bit allows anyone to execute the directory which means "pass through it" but it forces ownership of a file to delete it. 
+The permission to set the sticky bit on a publicly writable directory is:
+chmod 1777 dirname 
+Also remember this little bit of complication was created by the fact that there is interaction between 2 services, Samba server and the local Linux file services. Gotta watch for that! 
+See Also: man chmod and our Linux textbook for a more complete handling of the sticky bit. 
+
+Role based access control(RBAC)
+user private group
+change /etc/shadow, /etc/gshadow,/etc/passwd and create a new user
+
+--------0411
+POP Mail
+
+vi /etc/samba/smb.conf
+rm -rf (delete profile)
+ls -l /home/student31
+home: windows home
+public_html: web server
+
+limit the concurrent users
+
+---------------------------------
+
+nslookup 192.168.1.13
+change name and description of the computer(don't start yet)
+add a new user account
+control panel: user account: student13
+reboot the compuater
+control panel: change password: student13
+
+\\olin\NETLOGON
+maps an M to \\olin\userhome and place this login script in \\olin\NETLOGON
+net use M: /delete /y
+net use M: \\olin\userhome /persistent:yes
+pause
+
+ \\olin\software Eudora
+install it in M:\mail\sp1810am
+place a shortcut on your desktop and name it BrynaZhaoEudora
+POP Server: surt.csc130.parkland.edu
+SMTP Server: surt.csc130.parkland.edu
+student13@surt.csc130.parkland.edu
+
+Make a signature and send an e-mail to smauney@surt.csc130.parkland.edu
+
+set machine to login domain, 
+mycomputer=>properties=>computer anme=>change=>domain x130
+
+--------0416
+you can't share sth. on your mapped drive, only local file/directory can be shared
+putty surt.csc130.parkland.edu 22
+a security alert:
+public key encryption
+yes(a registry entry is made), no, cancel, read the message
+Eudora: don't authenticate out mails
+
+/var/spool/mail/#USER
+TLS: transport layer security
+
+Wireshark:
+1. task one: find the mail body
+Sort by Source
+from 157 to 155 
+Protocol: SMTP
+Info: Message Body
+Transmission Control Protocol: Src Port:40336, Dst Port: smtp 25
+Simple Mail Transfer Protocol: Message...
+No encryption
+
+2.find the password
+Sort by Source
+from 31 to 155
+POP
+Info: Request: PASS student31
+
+find the body
+sort by desitnation
+from 155 to 31
+POP
+Info: Response +OK 777 octets
+Post Office Protocol:
+From: root@olin.csc130.parkland.edu (root)\r\n
+You should be able to see this\r\n
+
+secure sockets, start TLS when available
+
+3. 
+can only find POP go from 31 to 155
+
+
+--------0418
+Eudora: 
+option: sending mail=>allow authentication 
+set |grep MAIL
+MAIL=/var/spool/mail/root
+grep "test" /var/spool/mail//student31
+
+
+Procotol:SMTP
+Info:Message Body 
+Src port:1056, Dst Port:25
+
+Info:EHLO bigsean.surt.csc130.parkland.edu
+
+to send out a mail, the password is not checked(even you gave a wrong password, it will send through)
+
+public key encryption: complex algorithm
+private key encryption: more effecient
+pki:public key infrastructure
+ssh-keygen generates two keys:one public, one private
+publick key=>surt
+ssh-keygen -t rsa generates 
+
+sftp
+
+ssh-keygen lab
+Generate your keys and place them using sftp. Generate the keys on 
+olin.csc130.parkland.edu and then place your public key from olin onto 
+surt.csc130.parkland.edu . After you do that you should be able to 
+login to surt from olin without having to enter a password.
+
+from olin
+putty login
+olin student13 student13
+ls -a (no .ssh)
+ssh-keygen -t rsa
+enter three times
+cd .ssh (.ssh exists)
+ls -l
+
+stfp surt
+yes
+student13 student 13
+put id_rsa.pub
+(or put .ssh/id_rsa.pub)
+quit
+
+ssh surt
+mkdir .ssh
+mv id_rsa.pub .ssh/authorized_keys
+chmod 700 .ssh
+exit
+
+then login olin 
+ssh surt
+(no need password to login)
+
+--------0423
+authentication refused: bad ownership or modes for directory /home/student31/.ssh 
+chmod 700 ~student31/.ssh
+
+ssh student4@surt
+known_hosts
+authorized_keys
+
+man 3 crypt
+chmod 4711 /usr/bin/passwd( 2=>user, 4=>group)
+
+change student31's password to student4
+their hash don't match even though they have the same password
+
+putty=>Connection=>SSH=>Tunnels
+
+Port 110,25
+
+Eudora
+Options=>Outgoing Mail
+
+SMTP Message Body
+Des port:STMP (25)
+you can see the message
+when you use tunnel, you can't see the message
+
+--------0425
+putty login www.csit.parkland.edu 
+drivethrough permission 711
+chmod 711 demo1
+demo1/sth.txt
+sth.txt 644
+demo1 
+
+from other student: 
+cd demo1 yes
+ls no
+cat sth.txt yes(if you know the name of the file)
+grep extra httpd.conf |head
+UserDir public_html(directives)
+/etc/httpd/extra/httpd-userdir.conf
+.htaccess( change the default configuration of the web server)
+
+
+lab:
+under bzhao1/public_html
+vi .htaccess
+DirectoryIndex bryna.txt
+then open http://www.csit.parkland.edu/~bzhao1/
+
+cd public_html/testaccess
+error message: ./vhosts/www/error_log
+find -maxdepth 2 -name .htaccess
+htpasswd
+
+--------0430
+allow all out keep state
+worm and virus
+a virus requires a habitat(a host program) to propagate 
+.com (can be a file not a website) has a higher execution level than .exe 
+
+cordred.txt
+-------VNC lab
+user level vs share level
+
+
+--------0502
+Binding Network Protocols
+rebuild the machine
+IPTCP setup
+
+1. log in to local machine 
+My Computer
+Computer Name
+Computer desciription Byrna Zhao 13
+Computer Name
+varnado
+
+Inside NetBios:
+X130(Only Olin)
+LASWERKIWI,GROUP2=>serve IPX only
+NORTHKOREA,GROUP1=>serve TCP
+shareipx
+sharetcp
+
+-----------------------
+2. install IPX/SPX
+Local Area Connection Properties=>General=>Install=>Protocol=>NWLink IPX/SPX NetBIOS
+3. unbind TCP/IP
+Network Connections->Advanced Tab=>Advanced Settings=>Bindings for Local Area Connection
+uncheck Internet Protocol(TCP/IP) under File and Printer Ssharing for Microsoft Networks and under Client for Microsoft Networks
+
+4. Create a share named "shareipx"
+Under C drive, make a folder called share and inside create a txt file
+Right click the folder=>Properties=>Sharing=>
+Share this folder with both network users 
+Share name:shareipx
+
+check \\olin won't work
+check client TCP/IP \\olin will work
+
+turned on TCP/IP client
+and group2 can see anyone from group1
+
+--------0507
+nbtstat -a olin(it will work)
+nbtstat -a surt(surt is not listening to windows)
+
+check who is the master browser of a group
+nbtstat -a dread(the machine name)
+you will see .._MSBROWSE__.<01> GROUP
+
+if any machine connects to the anyone other than the master browser, the mb participate in
+
+Olin is the MB of X130 Group
+
+turn off dread, bemilicious picks on
+WireShark:
+Protocol: BROWSE
+Info: get backup list request
+      =>browser election request
+
+not full election
+
+My Network Places=>View workgroup computers=>Microsoft Windows Network
+
+Registry Editor
+value:MaintainServerList
+Data:yes | no | auto
+
+
+don't want election happen in the first place
+
+CMD: regedit
+
+regedit Key: 
+\HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\Browser\Parameters
+
+Value: MaintainServerList
+
+Data: yes |  no  | auto
+
+--------0509
+fault Tolerance and Disaster Recovery(off site backup)
+RAID 5 parity bit, three separate disks
+no backup for RAID 5
+
+attrib
+attrib +h hello.txt  hide the file
+attrib -h hello.txt  see the file again
+have to unhide it first then change the attrib
+
+ead-only - Allows the file to be only viewed and not written to or changed.
+Archived - Allows Microsoft Backup and other backup programs to know what files to back up.
+Hidden - Makes files invisible to standard users and hidden if show hidden files is enabled.
+System - Makes the file an important system file.
+
+attrib -a hello.txt  hide the file
+dir (can't see A before the file)
